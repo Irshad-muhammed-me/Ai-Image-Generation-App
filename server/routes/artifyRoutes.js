@@ -13,7 +13,7 @@ const router = express.Router();
 
 console.log("Artify routes loaded");
 
-// Helper: Hugging Face API (Free and reliable)
+
 async function callHuggingFaceAPI(prompt) {
   const response = await axios.post(
     "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2",
@@ -33,7 +33,7 @@ async function callHuggingFaceAPI(prompt) {
   return { photo: base64 };
 }
 
-// Helper: Gemini API for image generation
+
 async function callGeminiAPI(prompt) {
   try {
     const API_KEY = process.env.GEMINI_IMAGE;
@@ -83,7 +83,6 @@ async function callGeminiAPI(prompt) {
     let generatedImageBuffer = null;
     for (const part of response.candidates[0].content.parts) {
       if (part.inlineData) {
-        // This part contains image data (base64)
         generatedImageBuffer = part.inlineData.data;
         break;
       }
@@ -100,14 +99,13 @@ async function callGeminiAPI(prompt) {
   }
 }
 
-// Main route
 router.route("/").post(async (req, res) => {
   const { prompt } = req.body;
 
   try {
     let result;
 
-    // Try Hugging Face first (more reliable)
+
     if (process.env.HF_API_KEY) {
       try {
         result = await callHuggingFaceAPI(prompt);
@@ -118,7 +116,7 @@ router.route("/").post(async (req, res) => {
       }
     }
 
-    // Try Gemini as fallback
+ 
     if (process.env.GEMINI_IMAGE) {
       try {
         result = await callGeminiAPI(prompt);
@@ -129,7 +127,7 @@ router.route("/").post(async (req, res) => {
       }
     }
 
-    // If no API keys or both failed
+  
     throw new Error(
       "No valid API keys found. Please add HF_API_KEY or GEMINI_IMAGE to .env file"
     );

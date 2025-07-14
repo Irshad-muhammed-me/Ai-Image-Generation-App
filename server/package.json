@@ -19,9 +19,6 @@
     "dotenv": "^17.1.0",
     "express": "^5.1.0",
     "mongoose": "^8.16.2",
-    "node-fetch": "^3.3.2",
-    "nodemon": "^3.1.10",
-    "openai": "^5.8.2",
-    "replicate": "^1.0.1"
+    "nodemon": "^3.1.10"
   }
 }
