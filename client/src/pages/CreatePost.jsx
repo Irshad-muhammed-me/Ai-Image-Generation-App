@@ -21,18 +21,18 @@ const CreatePost = () => {
       try {
         setGeneratingImg(true);
 
-       const response = await fetch("http://localhost:8080/api/v1/artify", {
-         method: "POST",
-         headers: {
-           "Content-Type": "application/json",
-         },
-         body: JSON.stringify({ prompt: form.prompt }),
-       });
+        const response = await fetch("http://localhost:8080/api/v1/artify", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prompt: form.prompt }),
+        });
 
         const data = await response.json();
 
         if (response.ok) {
-          setForm({ ...form, photo: `data:image/jpeg;base64,${data.photo}` });
+          setForm({ ...form, photo: `data:image/png;base64,${data.photo}` });
         } else {
           alert(data.message || "Image generation failed. Please try again.");
           console.error("Backend error:", data);
@@ -48,9 +48,31 @@ const CreatePost = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Share logic can be added here later
+
+    if (form.prompt && form.photo) {
+      setLoading(true);
+
+      try {
+        const response = await fetch("http://localhost:8080/api/v1/post", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        });
+
+        await response.json();
+        navigate("/");
+      } catch (err) {
+        alert(err);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      alert("please enter a prompt and generate an image");
+    }
   };
 
   const handleChange = (e) => {
