@@ -9,7 +9,7 @@ const CreatePost = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
-    prompt: "an armchair in the shape of an avocado", 
+    prompt: "an armchair in the shape of an avocado",
     photo: "",
   });
 
@@ -21,13 +21,16 @@ const CreatePost = () => {
       try {
         setGeneratingImg(true);
 
-        const response = await fetch("http://localhost:8080/api/v1/artify", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ prompt: form.prompt }),
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/v1/artify`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ prompt: form.prompt }),
+          }
+        );
 
         const data = await response.json();
 
